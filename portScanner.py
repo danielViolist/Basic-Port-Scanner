@@ -14,7 +14,7 @@ class Bcolors:
 
 
 print(Bcolors.HEADER + "This is a simple port scanning tool." + Bcolors.ENDC)
-ip = input(Bcolors.OKBLUE + "Enter the ip or web address to scan: " + Bcolors.ENDC)
+ip = input(Bcolors.OKBLUE + "Enter the IP to scan: " + Bcolors.ENDC)
 ports = input(Bcolors.OKBLUE + "Enter the range of ports to scan (ex 0-100): " + Bcolors.ENDC)
 print()
 ports = ports.split("-")
@@ -41,9 +41,8 @@ if ipLength > 15 or ipLength < 7:
     print(Bcolors.WARNING + "[-] An invalid IP was entered." + Bcolors.ENDC)
     exit()
 
-soc = socket.socket()
-
 for i in range(low, high+1, 1):
+    soc = socket.socket()
     responseCode = soc.connect_ex((ip, i))  # This attempts to connect on the specified port, and returns a value
     if responseCode == 0:  # If the returned value is 0, the connection is possible
         print(Bcolors.OKGREEN + "Port", str(i), "is" + Bcolors.BOLD + " OPEN." + Bcolors.ENDC)
