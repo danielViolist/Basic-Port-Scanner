@@ -5,6 +5,7 @@ import (
 	"net"
 	"os"
 	"sort"
+	"strconv"
 )
 
 func scan(ports, res chan int, address string) {
@@ -21,11 +22,16 @@ func scan(ports, res chan int, address string) {
 }
 
 func main() {
-	if len(os.Args) != 2 {
+	if len(os.Args) != 3 {
 		fmt.Println("Address argument required!")
 		os.Exit(1)
 	}
 	address := os.Args[1]
+	portRange, err := strconv.Atoi(os.Args[2])
+	if err != nil {
+		fmt.Println("Error with max port. String-to-int conversion failure.")
+		os.Exit(2)
+	}
 	ports := make(chan int, 100)
 	res := make(chan int)
 	var open []int
@@ -33,11 +39,11 @@ func main() {
 		go scan(ports, res, address)
 	}
 	go func() {
-		for i := 1; i <= 65000; i++ {
+		for i := 1; i <= portRange; i++ {
 			ports <- i
 		}
 	}()
-	for i := 0; i < 65000; i++ {
+	for i := 0; i < portRange; i++ {
 		port := <-res
 		if port != 0 {
 			open = append(open, port)
